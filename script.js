@@ -259,13 +259,19 @@ document.addEventListener('DOMContentLoaded', () => {
   window.addEventListener('load', startMusicImmediately, { once: true });
 
   // 2. تفعيل فوري مع أول لمسة أو حركة طبيعية على شاشة الموبايل دون الحاجة للبحث عن زر
-  const autoPlayGestures = ['touchstart', 'touchend', 'pointerdown', 'mousedown', 'scroll'];
+  const autoPlayGestures = ['touchstart', 'touchend', 'touchmove', 'pointerdown', 'pointerup', 'mousedown', 'scroll', 'click'];
   const triggerAutoPlay = () => {
     startMusicImmediately();
-    autoPlayGestures.forEach(evt => window.removeEventListener(evt, triggerAutoPlay, { capture: true }));
+    if (audio.ctx && audio.ctx.state === 'running' && audio.isPlaying) {
+      autoPlayGestures.forEach(evt => {
+        window.removeEventListener(evt, triggerAutoPlay, { capture: true });
+        document.removeEventListener(evt, triggerAutoPlay, { capture: true });
+      });
+    }
   };
   autoPlayGestures.forEach(evt => {
     window.addEventListener(evt, triggerAutoPlay, { capture: true, passive: true });
+    document.addEventListener(evt, triggerAutoPlay, { capture: true, passive: true });
   });
 
   /* ==========================================================================
@@ -600,49 +606,32 @@ document.addEventListener('DOMContentLoaded', () => {
   const lockNoticeToast = document.getElementById('lock-notice-toast');
   const waxSeal = document.getElementById('wax-seal');
 
-  // وضع اختبار الـ 2 دقيقة بطلب يوسف
-  const urlParams = new URLSearchParams(window.location.search);
-  const nowMs = Date.now();
-  let testEndTime = localStorage.getItem('youssef_2min_target');
+  // مسح أي مؤقتات تجريبية سابقة وتثبيت الموعد الرسمي لذكرى عيد الزواج الرابع (1 أكتوبر 2026)
+  try {
+    localStorage.removeItem('youssef_2min_target');
+  } catch (e) {}
 
-  // إذا كانت القيمة غير موجودة، أو انتهت مدتها، أو تم طلب إعادة التعيين عبر الرابط:
-  // نبدأ دورة اختبار جديدة مدتها دقيقتان كاملتان (120 ثانية)
-  if (!testEndTime || urlParams.get('reset') || nowMs >= parseInt(testEndTime)) {
-    testEndTime = nowMs + 120000; // 120 ثانية = دقيقتان بالضبط
-    localStorage.setItem('youssef_2min_target', testEndTime);
-  }
-
-  const targetDate = new Date(parseInt(testEndTime));
-  let isGateUnlocked = false; // مقفولة في البداية لتجربة الفتح التلقائي بعد دقيقتين
+  const targetDate = new Date('2026-10-01T00:00:00');
   let toastTimer = null;
-
-  if (urlParams.get('unlock')) {
-    isGateUnlocked = true;
-  }
 
   function updateGateLockStatus() {
     const now = new Date();
-    if (now >= targetDate || isGateUnlocked) {
-      isGateUnlocked = true;
+    if (now >= targetDate) {
       if (openEnvelopeBtn) {
         openEnvelopeBtn.classList.remove('locked');
         if (btnLockIcon) btnLockIcon.className = 'fa-solid fa-heart fa-beat';
         if (btnLockText) btnLockText.textContent = 'انقر لفك ختم الحب واستلام هديتكِ يا ذكريات عمري ✨';
       }
       if (gateLockIcon) gateLockIcon.className = 'fa-solid fa-lock-open';
-      if (introHintText) introHintText.textContent = 'انتهت الدقيقتان وانفتح الختم تلقائياً! انقر على الظرف الآن 🎉💕';
+      if (introHintText) introHintText.textContent = 'حان موعد عيد زواجنا السعيد! انقر على الظرف الآن لفتح الهدية 🎉💕';
     } else {
-      isGateUnlocked = false;
       if (openEnvelopeBtn) {
         openEnvelopeBtn.classList.add('locked');
         if (btnLockIcon) btnLockIcon.className = 'fa-solid fa-lock';
-        const secLeft = Math.max(0, Math.ceil((targetDate.getTime() - now.getTime()) / 1000));
-        const m = Math.floor(secLeft / 60);
-        const s = secLeft % 60;
-        if (btnLockText) btnLockText.textContent = `الهدية مقفلة للاختبار (متبقي: ${m} دقيقة و ${s < 10 ? '0' : ''}${s} ثانية)`;
+        if (btnLockText) btnLockText.textContent = 'الهدية مغلقة حتى موعد عيد الزواج (1/10/2026)';
       }
       if (gateLockIcon) gateLockIcon.className = 'fa-solid fa-lock';
-      if (introHintText) introHintText.textContent = 'الهدية مقفلة للاختبار.. سوف تنفتح تلقائياً فور انتهاء الدقيقتين ✨';
+      if (introHintText) introHintText.textContent = 'سوف ينفتح الختم تلقائياً فور دخول أول ثانية من يوم 1 أكتوبر 2026 ✨';
     }
   }
 
@@ -661,6 +650,9 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   function triggerEnvelopeOpening() {
+    const now = new Date();
+    // حماية قاطعة ومطلقة: منع فتح الظرف نهائياً قبل حلول تاريخ 1 أكتوبر 2026
+    if (now < targetDate) return;
     if (envelope.classList.contains('open')) return;
 
     audio.playUnlockSound();
@@ -689,48 +681,30 @@ document.addEventListener('DOMContentLoaded', () => {
     }, 1800);
   }
 
-  function handleEnvelopeInteraction() {
+  function handleEnvelopeInteraction(e) {
+    if (e && typeof e.stopPropagation === 'function') {
+      e.stopPropagation();
+    }
     const now = new Date();
-    if (now < targetDate && !isGateUnlocked) {
-      // الهدية ما زالت مغلقة
+    if (now < targetDate) {
+      // الهدية مقفلة ومحفوظة بالحب حتى 1 أكتوبر 2026
       if (envelope) {
         envelope.classList.add('shake');
         setTimeout(() => envelope.classList.remove('shake'), 500);
       }
       audio.playChime(392.00, 'sine', 0.5);
-      showLockNoticeToast('صبراً يا حبيبة قلبي ذكريات 💕', 'هديتكِ ومفاجأتكِ الكبرى محفوظة ومقفلة بالحب، وستُفتح تلقائياً في أول ثانية من يوم 1 أكتوبر 2026 لتتويج عيد زواجنا الرابع!');
+      showLockNoticeToast(
+        'صبراً يا حبيبة قلبي ذكريات 💕',
+        'هديتكِ ومفاجأتكِ الكبرى محفوظة ومقفلة بالحب، وستُفتح تلقائياً في أول ثانية من يوم 1 أكتوبر 2026 لتتويج عيد زواجنا الرابع!'
+      );
     } else {
-      // حان الموعد أو تم فتح المعاينة
       triggerEnvelopeOpening();
     }
   }
 
   if (openEnvelopeBtn) openEnvelopeBtn.addEventListener('click', handleEnvelopeInteraction);
   if (envelope) envelope.addEventListener('click', handleEnvelopeInteraction);
-
-  // إزالة زر المعاينة تماماً من الواجهة مع الحفاظ على النقر السري الثلاثي على الختم للمعاينة
-  // الضغط 3 مرات سريعة على الشمع لفتح المعاينة
-  let sealClickCount = 0;
-  let lastSealClickTime = 0;
-  if (waxSeal) {
-    waxSeal.addEventListener('click', (e) => {
-      const currentTime = Date.now();
-      if (currentTime - lastSealClickTime < 700) {
-        sealClickCount++;
-        if (sealClickCount >= 3) {
-          e.stopPropagation();
-          isGateUnlocked = true;
-          updateGateLockStatus();
-          showLockNoticeToast('معاينة يوسف الملكية 👑', 'تم فك القفل لمعاينة يوسف! يمكنك الآن النقر على زر فتح الهدية للاطلاع على كافة التفاصيل.');
-          audio.playUnlockSound();
-          sealClickCount = 0;
-        }
-      } else {
-        sealClickCount = 1;
-      }
-      lastSealClickTime = currentTime;
-    });
-  }
+  if (waxSeal) waxSeal.addEventListener('click', handleEnvelopeInteraction);
 
   /* ==========================================================================
      8. منظومة الترفيه والرومانسية في بوابة القفل (حمام أبيض، رقصة، مطاردة، ألعاب)
@@ -953,17 +927,19 @@ document.addEventListener('DOMContentLoaded', () => {
     const now = new Date();
     let diff = targetDate.getTime() - now.getTime();
 
-    if (diff > 0 && !isGateUnlocked) {
-      const minutes = Math.floor(diff / (1000 * 60));
+    if (diff > 0) {
+      const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+      const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+      const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
       const seconds = Math.floor((diff % (1000 * 60)) / 1000);
 
-      if (daysEl) daysEl.textContent = '00';
-      if (hoursEl) hoursEl.textContent = '00';
+      if (daysEl) daysEl.textContent = String(days).padStart(2, '0');
+      if (hoursEl) hoursEl.textContent = String(hours).padStart(2, '0');
       if (minutesEl) minutesEl.textContent = String(minutes).padStart(2, '0');
       if (secondsEl) secondsEl.textContent = String(seconds).padStart(2, '0');
 
       if (countdownTitle) {
-        countdownTitle.textContent = `متبقي على فتح الهدية الملكية تلقائياً: ${minutes} دقيقة و ${seconds} ثانية ⏳`;
+        countdownTitle.textContent = 'الوقت المتبقي حتى يحين موعد فتح الهدية (1/10/2026)';
       }
 
       updateGateLockStatus();
@@ -974,10 +950,9 @@ document.addEventListener('DOMContentLoaded', () => {
       if (secondsEl) secondsEl.textContent = '00';
 
       if (countdownTitle) {
-        countdownTitle.textContent = 'انتهت الدقيقتان وانفتح القفل تلقائياً! انقر لفتح الهدية الآن 🎉💕';
+        countdownTitle.textContent = 'عيد زواجنا الرابع مبارك وسعيد يا يوسف وذكريات! ❤️🎉';
       }
 
-      isGateUnlocked = true;
       updateGateLockStatus();
     }
   }
