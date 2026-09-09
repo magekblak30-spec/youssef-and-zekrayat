@@ -543,7 +543,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const waxSeal = document.getElementById('wax-seal');
 
   const targetDate = new Date('2026-10-01T00:00:00');
-  let isGateUnlocked = false;
+  let isGateUnlocked = true; // وضع المعاينة المؤقتة مفتوح بطلب يوسف
   let toastTimer = null;
 
   // فحص ما إذا كان الرابط يحتوي على معامل معاينة خاص
@@ -559,10 +559,10 @@ document.addEventListener('DOMContentLoaded', () => {
       if (openEnvelopeBtn) {
         openEnvelopeBtn.classList.remove('locked');
         if (btnLockIcon) btnLockIcon.className = 'fa-solid fa-heart fa-beat';
-        if (btnLockText) btnLockText.textContent = 'انقري لفك ختم الحب واستلام هديتكِ يا ذكريات عمري ✨';
+        if (btnLockText) btnLockText.textContent = 'اضغط هنا لفك الختم والدخول للمفاجأة الملكية ✨';
       }
       if (gateLockIcon) gateLockIcon.className = 'fa-solid fa-lock-open';
-      if (introHintText) introHintText.textContent = 'أشرقت شمس 1 أكتوبر 2026! انقري لفتح الهدية المباركة 🎉💕';
+      if (introHintText) introHintText.textContent = 'وضع المعاينة مفتوح الآن! اضغط على الظرف أو الزر للدخول 🎉💕';
     } else {
       if (openEnvelopeBtn) {
         openEnvelopeBtn.classList.add('locked');
