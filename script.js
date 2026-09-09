@@ -12,11 +12,32 @@ window.openLightbox = function(src, caption) {
   if (modal && img) {
     img.src = src;
     if (cap) cap.textContent = caption || '';
+    document.body.classList.add('modal-open');
     modal.classList.add('active');
   }
 };
 
 document.addEventListener('DOMContentLoaded', () => {
+
+  /* ==========================================================================
+     0. منع التكبير المزدوج والزوم العرضي على الموبايل (Anti-Zoom on Touch)
+     ========================================================================== */
+  let lastTapTimestamp = 0;
+  document.addEventListener('touchend', (e) => {
+    const currentTime = Date.now();
+    const tapLength = currentTime - lastTapTimestamp;
+    if (tapLength < 320 && tapLength > 0) {
+      if (e.target && !['INPUT', 'TEXTAREA', 'SELECT'].includes(e.target.tagName)) {
+        e.preventDefault();
+        e.target.click();
+      }
+    }
+    lastTapTimestamp = currentTime;
+  }, { passive: false });
+
+  document.addEventListener('gesturestart', (e) => e.preventDefault());
+  document.addEventListener('gesturechange', (e) => e.preventDefault());
+  document.addEventListener('gestureend', (e) => e.preventDefault());
 
   /* ==========================================================================
      1. تحسين الأداء الفائق وتجاوز الكاش (Zero-Lag Performance Engine)
@@ -113,20 +134,35 @@ document.addEventListener('DOMContentLoaded', () => {
 
     playSoftPianoNote(freq) {
       if (!this.ctx) return;
-      const osc = this.ctx.createOscillator();
-      const gain = this.ctx.createGain();
+      const now = this.ctx.currentTime;
 
-      osc.type = 'sine';
-      osc.frequency.setValueAtTime(freq, this.ctx.currentTime);
+      // نغمة أساسية دافئة (Warm Fundamental)
+      const osc1 = this.ctx.createOscillator();
+      const gain1 = this.ctx.createGain();
+      osc1.type = 'triangle';
+      osc1.frequency.setValueAtTime(freq, now);
 
-      gain.gain.setValueAtTime(0.09, this.ctx.currentTime);
-      gain.gain.exponentialRampToValueAtTime(0.0001, this.ctx.currentTime + 2.0);
+      gain1.gain.setValueAtTime(0.20, now);
+      gain1.gain.exponentialRampToValueAtTime(0.0001, now + 2.2);
 
-      osc.connect(gain);
-      gain.connect(this.ctx.destination);
+      osc1.connect(gain1);
+      gain1.connect(this.ctx.destination);
+      osc1.start(now);
+      osc1.stop(now + 2.2);
 
-      osc.start();
-      osc.stop(this.ctx.currentTime + 2.0);
+      // وميض نغمي علوي خفيف (Harmonic Shimmer)
+      const osc2 = this.ctx.createOscillator();
+      const gain2 = this.ctx.createGain();
+      osc2.type = 'sine';
+      osc2.frequency.setValueAtTime(freq * 2, now);
+
+      gain2.gain.setValueAtTime(0.07, now);
+      gain2.gain.exponentialRampToValueAtTime(0.0001, now + 1.5);
+
+      osc2.connect(gain2);
+      gain2.connect(this.ctx.destination);
+      osc2.start(now);
+      osc2.stop(now + 1.5);
     }
 
     playHeartbeatDouble() {
@@ -206,6 +242,31 @@ document.addEventListener('DOMContentLoaded', () => {
       audio.toggle();
     });
   }
+
+  // تشغيل الموسيقى الرومانسية فوراً عند دخول الموقع دون انتظار فتح الرسالة
+  function startMusicImmediately() {
+    audio.init();
+    if (audio.ctx && audio.ctx.state === 'suspended') {
+      audio.ctx.resume().catch(() => {});
+    }
+    if (!audio.isPlaying) {
+      audio.startAmbientMusic();
+    }
+  }
+
+  // 1. محاولة التشغيل الفوري مع تحميل الصفحة
+  startMusicImmediately();
+  window.addEventListener('load', startMusicImmediately, { once: true });
+
+  // 2. تفعيل فوري مع أول لمسة أو حركة طبيعية على شاشة الموبايل دون الحاجة للبحث عن زر
+  const autoPlayGestures = ['touchstart', 'touchend', 'pointerdown', 'mousedown', 'scroll'];
+  const triggerAutoPlay = () => {
+    startMusicImmediately();
+    autoPlayGestures.forEach(evt => window.removeEventListener(evt, triggerAutoPlay, { capture: true }));
+  };
+  autoPlayGestures.forEach(evt => {
+    window.addEventListener(evt, triggerAutoPlay, { capture: true, passive: true });
+  });
 
   /* ==========================================================================
      تحميل مسبق لكافة صور الذكريات الـ 18 فور دخول الموقع في الخلفية
@@ -348,14 +409,20 @@ document.addEventListener('DOMContentLoaded', () => {
   const lightboxModal = document.getElementById('lightbox-modal');
   const lightboxCloseBtn = document.getElementById('lightbox-close-btn');
 
-  if (lightboxCloseBtn && lightboxModal) {
-    lightboxCloseBtn.addEventListener('click', () => {
+  function closeLightboxModal() {
+    if (lightboxModal) {
       lightboxModal.classList.remove('active');
-    });
+      document.body.classList.remove('modal-open');
+    }
+  }
 
+  if (lightboxCloseBtn) {
+    lightboxCloseBtn.addEventListener('click', closeLightboxModal);
+  }
+  if (lightboxModal) {
     lightboxModal.addEventListener('click', (e) => {
       if (e.target === lightboxModal) {
-        lightboxModal.classList.remove('active');
+        closeLightboxModal();
       }
     });
   }
@@ -538,8 +605,9 @@ document.addEventListener('DOMContentLoaded', () => {
   const nowMs = Date.now();
   let testEndTime = localStorage.getItem('youssef_2min_target');
 
-  // إذا تم طلب إعادة التعيين أو مرت 5 دقائق على انتهاء الاختبار، تبدأ دورة جديدة مدتها دقيقتان
-  if (!testEndTime || urlParams.get('reset') || nowMs > parseInt(testEndTime) + 300000) {
+  // إذا كانت القيمة غير موجودة، أو انتهت مدتها، أو تم طلب إعادة التعيين عبر الرابط:
+  // نبدأ دورة اختبار جديدة مدتها دقيقتان كاملتان (120 ثانية)
+  if (!testEndTime || urlParams.get('reset') || nowMs >= parseInt(testEndTime)) {
     testEndTime = nowMs + 120000; // 120 ثانية = دقيقتان بالضبط
     localStorage.setItem('youssef_2min_target', testEndTime);
   }
@@ -610,12 +678,15 @@ document.addEventListener('DOMContentLoaded', () => {
 
     setTimeout(() => {
       audio.startAmbientMusic();
-    }, 600);
+    }, 400);
 
     setTimeout(() => {
+      // إزالة عزل شاشة القفل وتفعيل السكرول الطبيعي لصفحة الاحتفال
+      document.body.classList.remove('intro-active');
       introScreen.classList.add('opened');
+      window.scrollTo(0, 0);
       fireworksBlast();
-    }, 2200);
+    }, 1800);
   }
 
   function handleEnvelopeInteraction() {
@@ -756,6 +827,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   function openHeartbeatModal() {
     if (!heartbeatModal) return;
+    document.body.classList.add('modal-open');
     heartbeatModal.classList.add('active');
     isHeartbeatAudioActive = true;
     audio.startHeartbeatLoop();
@@ -766,6 +838,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   function closeHeartbeatModal() {
     if (!heartbeatModal) return;
+    document.body.classList.remove('modal-open');
     heartbeatModal.classList.remove('active');
     audio.stopHeartbeatLoop();
   }
@@ -827,13 +900,24 @@ document.addEventListener('DOMContentLoaded', () => {
         return;
       }
 
+      // بريق ذهبي فوري في وسط الشاشة ليلفت الانتباه للشموع
+      if (typeof confetti === 'function') {
+        confetti({
+          particleCount: 45,
+          spread: 80,
+          origin: { y: 0.5 },
+          zIndex: 1000005,
+          colors: ['#ffd166', '#ffb703', '#fb8500', '#fff3b0']
+        });
+      }
+
       for (let i = 0; i < 4; i++) {
         candleCount++;
         const candle = document.createElement('div');
         candle.className = 'floating-candle';
         // موضع ذكي داخل الشاشة المرئية مباشرة أمام المستخدم
         const posX = Math.random() * 70 + 15; // 15% إلى 85% من عرض الشاشة
-        const posY = Math.random() * 50 + 25; // 25% إلى 75% من ارتفاع الشاشة
+        const posY = Math.random() * 45 + 25; // 25% إلى 70% من ارتفاع الشاشة
         candle.style.left = `${posX}%`;
         candle.style.top = `${posY}%`;
         candle.innerHTML = `
@@ -869,32 +953,29 @@ document.addEventListener('DOMContentLoaded', () => {
     const now = new Date();
     let diff = targetDate.getTime() - now.getTime();
 
-    if (diff > 0) {
-      const days = Math.floor(diff / (1000 * 60 * 60 * 24));
-      const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-      const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+    if (diff > 0 && !isGateUnlocked) {
+      const minutes = Math.floor(diff / (1000 * 60));
       const seconds = Math.floor((diff % (1000 * 60)) / 1000);
 
-      if (daysEl) daysEl.textContent = String(days).padStart(2, '0');
-      if (hoursEl) hoursEl.textContent = String(hours).padStart(2, '0');
+      if (daysEl) daysEl.textContent = '00';
+      if (hoursEl) hoursEl.textContent = '00';
       if (minutesEl) minutesEl.textContent = String(minutes).padStart(2, '0');
       if (secondsEl) secondsEl.textContent = String(seconds).padStart(2, '0');
+
+      if (countdownTitle) {
+        countdownTitle.textContent = `متبقي على فتح الهدية الملكية تلقائياً: ${minutes} دقيقة و ${seconds} ثانية ⏳`;
+      }
 
       updateGateLockStatus();
     } else {
-      if (countdownTitle) {
-        countdownTitle.textContent = 'عيد زواجنا الرابع مبارك وسعيد يا يوسف وذكريات! ❤️🎉';
-      }
-      const pastDiff = Math.abs(diff);
-      const days = Math.floor(pastDiff / (1000 * 60 * 60 * 24));
-      const hours = Math.floor((pastDiff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-      const minutes = Math.floor((pastDiff % (1000 * 60 * 60)) / (1000 * 60));
-      const seconds = Math.floor((pastDiff % (1000 * 60)) / 1000);
+      if (daysEl) daysEl.textContent = '00';
+      if (hoursEl) hoursEl.textContent = '00';
+      if (minutesEl) minutesEl.textContent = '00';
+      if (secondsEl) secondsEl.textContent = '00';
 
-      if (daysEl) daysEl.textContent = String(days).padStart(2, '0');
-      if (hoursEl) hoursEl.textContent = String(hours).padStart(2, '0');
-      if (minutesEl) minutesEl.textContent = String(minutes).padStart(2, '0');
-      if (secondsEl) secondsEl.textContent = String(seconds).padStart(2, '0');
+      if (countdownTitle) {
+        countdownTitle.textContent = 'انتهت الدقيقتان وانفتح القفل تلقائياً! انقر لفتح الهدية الآن 🎉💕';
+      }
 
       isGateUnlocked = true;
       updateGateLockStatus();
@@ -926,11 +1007,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
   function openSecretLetter() {
     audio.playUnlockSound();
+    document.body.classList.add('modal-open');
     letterModal.classList.add('active');
     fireworksBlast();
   }
 
   function closeSecretLetter() {
+    document.body.classList.remove('modal-open');
     letterModal.classList.remove('active');
   }
 
@@ -1068,8 +1151,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (e.key === 'Escape') {
       if (typeof closeHeartbeatModal === 'function') closeHeartbeatModal();
       if (typeof closeSecretLetter === 'function') closeSecretLetter();
-      const lightbox = document.getElementById('lightbox-modal');
-      if (lightbox) lightbox.classList.remove('active');
+      if (typeof closeLightboxModal === 'function') closeLightboxModal();
     }
   });
 

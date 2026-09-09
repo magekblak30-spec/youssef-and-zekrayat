@@ -40,11 +40,14 @@
   margin: 0;
   padding: 0;
   -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
 }
 
 html {
   scroll-behavior: smooth;
   font-size: 16px;
+  touch-action: manipulation;
+  -webkit-text-size-adjust: 100%;
 }
 
 body {
@@ -60,6 +63,28 @@ body {
   overflow-x: hidden;
   position: relative;
   min-height: 100vh;
+  touch-action: manipulation;
+  -webkit-text-size-adjust: 100%;
+}
+
+/* عزل شاشة القفل لمنع أي تداخل بين صفحات الاسكرول نهائياً */
+body.intro-active {
+  overflow: hidden !important;
+  height: 100vh !important;
+  max-height: 100vh !important;
+  position: fixed;
+  width: 100%;
+  overscroll-behavior: none !important;
+}
+
+body.intro-active #main-content {
+  display: none !important;
+}
+
+/* قفل سكرول الصفحة الخلفية عند فتح النوافذ المنبثقة */
+body.modal-open {
+  overflow: hidden !important;
+  overscroll-behavior: none !important;
 }
 
 /* كانفاس الجزيئات الحية في الخلفية */
@@ -78,13 +103,19 @@ body {
   position: fixed;
   top: 0;
   left: 0;
+  right: 0;
+  bottom: 0;
   width: 100%;
   height: 100%;
+  height: 100dvh;
   z-index: 9999;
   display: flex;
   align-items: flex-start;
   justify-content: center;
   overflow-y: auto;
+  overflow-x: hidden;
+  overscroll-behavior: contain;
+  -webkit-overflow-scrolling: touch;
   padding: 35px 20px 60px;
   transition: opacity 1.3s cubic-bezier(0.4, 0, 0.2, 1), visibility 1.3s;
   background: radial-gradient(circle at center, #260a35 0%, #06020a 85%);
@@ -345,9 +376,9 @@ body {
 /* مشغل الموسيقى العائم الفاخر */
 .music-controller {
   position: fixed;
-  bottom: 28px;
-  right: 28px;
-  z-index: 1000;
+  bottom: 24px;
+  right: 24px;
+  z-index: 10002;
   display: flex;
   align-items: center;
   gap: 12px;
@@ -2288,16 +2319,16 @@ body {
 
 /* شموع العشق العائمة */
 .floating-candle {
-  position: fixed;
-  width: 26px;
-  height: 48px;
+  position: fixed !important;
+  width: 30px;
+  height: 54px;
   display: flex;
   flex-direction: column;
   align-items: center;
   pointer-events: none;
-  z-index: 100001;
+  z-index: 9999998 !important;
   animation: candleFloat 3s ease-in-out infinite alternate;
-  filter: drop-shadow(0 0 16px rgba(255, 209, 102, 0.9));
+  filter: drop-shadow(0 0 20px rgba(255, 209, 102, 0.95)) drop-shadow(0 0 35px rgba(255, 77, 109, 0.5));
   transition: opacity 1.2s ease, transform 1.2s ease;
 }
 
@@ -2536,13 +2567,36 @@ body {
 
 @media (max-width: 640px) {
   .romantic-lounge-container {
-    padding: 20px 14px;
+    padding: 18px 12px;
   }
   .toys-buttons-grid {
     grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+  }
+  .toy-btn:last-child {
+    grid-column: span 2;
   }
   .heartbeat-modal-card {
     padding: 30px 18px 24px;
+  }
+  .music-controller {
+    bottom: 16px;
+    right: 16px;
+  }
+  .music-btn {
+    width: 52px;
+    height: 52px;
+  }
+  .vinyl-disc {
+    width: 40px;
+    height: 40px;
+  }
+  .open-btn {
+    font-size: 0.92rem;
+    padding: 14px 18px;
+    width: 100%;
+    max-width: 320px;
+    justify-content: center;
   }
 }
 
