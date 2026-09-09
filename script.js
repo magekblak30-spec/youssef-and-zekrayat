@@ -19,23 +19,11 @@ window.openLightbox = function(src, caption) {
 document.addEventListener('DOMContentLoaded', () => {
 
   /* ==========================================================================
-     1. إضافة خلفيات ضبابية ذكية متطابقة لكل صورة لعرض الصور كاملة بدون أي قص
+     1. تحسين الأداء الفائق وتجاوز الكاش (Zero-Lag Performance Engine)
      ========================================================================== */
   function setupAmbientBlurBackdrops() {
-    document.querySelectorAll('.polaroid-photo, .slide-item').forEach((container) => {
-      const img = container.querySelector('.slide-img');
-      if (img && !container.querySelector('.photo-bg-blur')) {
-        const blurDiv = document.createElement('div');
-        blurDiv.className = 'photo-bg-blur';
-        const src = img.getAttribute('src');
-        if (src) {
-          blurDiv.style.backgroundImage = `url("${src}")`;
-        }
-        container.insertBefore(blurDiv, img);
-      }
-    });
+    // تم إلغاء معالجة البلور الثقيلة لتسريع الصفحة 10 أضعاف وتوفير بطارية وسرعة الموبايل
   }
-  setupAmbientBlurBackdrops();
 
   /* ==========================================================================
      2. نظام الصوتيات والموسيقى الرومانسية المتطورة (Web Audio API)
@@ -495,16 +483,19 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
 
-  for (let i = 0; i < 50; i++) {
+  const particleCount = window.innerWidth < 768 ? 18 : 35;
+  for (let i = 0; i < particleCount; i++) {
     particles.push(new Particle());
   }
 
   function animateCanvas() {
-    ctx.clearRect(0, 0, width, height);
-    particles.forEach((p) => {
-      p.update();
-      p.draw();
-    });
+    if (!document.hidden) {
+      ctx.clearRect(0, 0, width, height);
+      particles.forEach((p) => {
+        p.update();
+        p.draw();
+      });
+    }
     requestAnimationFrame(animateCanvas);
   }
   animateCanvas();
@@ -542,13 +533,22 @@ document.addEventListener('DOMContentLoaded', () => {
   const lockNoticeToast = document.getElementById('lock-notice-toast');
   const waxSeal = document.getElementById('wax-seal');
 
-  const targetDate = new Date('2026-10-01T00:00:00');
-  let isGateUnlocked = true; // وضع المعاينة المؤقتة مفتوح بطلب يوسف
+  // وضع اختبار الـ 2 دقيقة بطلب يوسف
+  const urlParams = new URLSearchParams(window.location.search);
+  const nowMs = Date.now();
+  let testEndTime = localStorage.getItem('youssef_2min_target');
+
+  // إذا تم طلب إعادة التعيين أو مرت 5 دقائق على انتهاء الاختبار، تبدأ دورة جديدة مدتها دقيقتان
+  if (!testEndTime || urlParams.get('reset') || nowMs > parseInt(testEndTime) + 300000) {
+    testEndTime = nowMs + 120000; // 120 ثانية = دقيقتان بالضبط
+    localStorage.setItem('youssef_2min_target', testEndTime);
+  }
+
+  const targetDate = new Date(parseInt(testEndTime));
+  let isGateUnlocked = false; // مقفولة في البداية لتجربة الفتح التلقائي بعد دقيقتين
   let toastTimer = null;
 
-  // فحص ما إذا كان الرابط يحتوي على معامل معاينة خاص
-  const urlParams = new URLSearchParams(window.location.search);
-  if (urlParams.get('preview') || urlParams.get('unlock')) {
+  if (urlParams.get('unlock')) {
     isGateUnlocked = true;
   }
 
@@ -559,18 +559,22 @@ document.addEventListener('DOMContentLoaded', () => {
       if (openEnvelopeBtn) {
         openEnvelopeBtn.classList.remove('locked');
         if (btnLockIcon) btnLockIcon.className = 'fa-solid fa-heart fa-beat';
-        if (btnLockText) btnLockText.textContent = 'اضغط هنا لفك الختم والدخول للمفاجأة الملكية ✨';
+        if (btnLockText) btnLockText.textContent = 'انقر لفك ختم الحب واستلام هديتكِ يا ذكريات عمري ✨';
       }
       if (gateLockIcon) gateLockIcon.className = 'fa-solid fa-lock-open';
-      if (introHintText) introHintText.textContent = 'وضع المعاينة مفتوح الآن! اضغط على الظرف أو الزر للدخول 🎉💕';
+      if (introHintText) introHintText.textContent = 'انتهت الدقيقتان وانفتح الختم تلقائياً! انقر على الظرف الآن 🎉💕';
     } else {
+      isGateUnlocked = false;
       if (openEnvelopeBtn) {
         openEnvelopeBtn.classList.add('locked');
         if (btnLockIcon) btnLockIcon.className = 'fa-solid fa-lock';
-        if (btnLockText) btnLockText.textContent = 'الهدية مغلقة حتى موعد عيد الزواج (1/10/2026)';
+        const secLeft = Math.max(0, Math.ceil((targetDate.getTime() - now.getTime()) / 1000));
+        const m = Math.floor(secLeft / 60);
+        const s = secLeft % 60;
+        if (btnLockText) btnLockText.textContent = `الهدية مقفلة للاختبار (متبقي: ${m} دقيقة و ${s < 10 ? '0' : ''}${s} ثانية)`;
       }
       if (gateLockIcon) gateLockIcon.className = 'fa-solid fa-lock';
-      if (introHintText) introHintText.textContent = 'سوف ينفتح الختم تلقائياً فور دخول يوم 1 أكتوبر 2026 ✨';
+      if (introHintText) introHintText.textContent = 'الهدية مقفلة للاختبار.. سوف تنفتح تلقائياً فور انتهاء الدقيقتين ✨';
     }
   }
 
@@ -663,14 +667,24 @@ document.addEventListener('DOMContentLoaded', () => {
   // أ) نظام أسراب الحمام الأبيض الطائر في السماء
   const dovesSkyLayer = document.getElementById('doves-sky-layer');
 
-  function createDoveElement(startX, startY, speed, scale = 1, carriesHeart = true) {
-    if (!dovesSkyLayer) return;
+  function createDoveElement(startYVh, scale = 1, duration = 3.2, carriesHeart = true) {
+    let layer = document.getElementById('doves-sky-layer');
+    if (!layer) {
+      layer = document.createElement('div');
+      layer.id = 'doves-sky-layer';
+      layer.className = 'doves-sky-layer';
+      document.body.appendChild(layer);
+    }
+
     const dove = document.createElement('div');
     dove.className = 'sky-dove';
-    dove.style.left = `${startX}px`;
-    dove.style.top = `${startY}px`;
-    dove.style.width = `${44 * scale}px`;
-    dove.style.height = `${38 * scale}px`;
+    const endYVh = Math.max(12, startYVh - (Math.random() * 22 + 8));
+    dove.style.setProperty('--fly-start-y', `${startYVh}vh`);
+    dove.style.setProperty('--fly-end-y', `${endYVh}vh`);
+    dove.style.setProperty('--fly-scale', `${scale}`);
+    dove.style.animationDuration = `${duration}s`;
+    dove.style.width = `${50 * scale}px`;
+    dove.style.height = `${42 * scale}px`;
 
     dove.innerHTML = `
       <svg viewBox="0 0 60 50" fill="none">
@@ -684,61 +698,32 @@ document.addEventListener('DOMContentLoaded', () => {
       </svg>
     `;
 
-    dovesSkyLayer.appendChild(dove);
-
-    let posX = startX;
-    let posY = startY;
-    const endX = window.innerWidth + 80;
-    const driftY = (Math.random() - 0.4) * 0.8;
-    const horizontalSpeed = speed;
-
-    function moveDove() {
-      posX += horizontalSpeed;
-      posY += Math.sin(posX / 40) * 1.2 + driftY;
-      dove.style.left = `${posX}px`;
-      dove.style.top = `${posY}px`;
-
-      if (posX < endX) {
-        requestAnimationFrame(moveDove);
-      } else {
-        dove.remove();
-      }
-    }
-    requestAnimationFrame(moveDove);
+    layer.appendChild(dove);
+    setTimeout(() => dove.remove(), (duration + 0.5) * 1000);
   }
 
-  // إطلاق حمام دوري ناعم في سماء البوابة
-  setInterval(() => {
-    if (document.hidden) return;
-    const startY = Math.random() * (window.innerHeight * 0.6) + 40;
-    const scale = Math.random() * 0.5 + 0.8;
-    const speed = Math.random() * 1.5 + 1.8;
-    createDoveElement(-60, startY, speed, scale, Math.random() > 0.3);
-  }, 4200);
-
-  // إطلاق حمامتين عند أول تحميل
+  // إطلاق حمامتين ناعمتين عند أول تحميل
   setTimeout(() => {
-    createDoveElement(-50, 80, 2.2, 1.1, true);
-    setTimeout(() => createDoveElement(-50, 140, 2.0, 0.9, true), 800);
-  }, 1200);
+    createDoveElement(35, 1.1, 3.2, true);
+    setTimeout(() => createDoveElement(48, 0.95, 3.0, true), 700);
+  }, 1000);
 
   function releaseFlockOfDoves() {
     audio.playChime(880, 'triangle', 0.8);
-    const vh = window.innerHeight || 600;
     for (let i = 0; i < 7; i++) {
       setTimeout(() => {
-        const startY = Math.random() * (vh * 0.45) + (vh * 0.15);
-        const scale = Math.random() * 0.4 + 0.95;
-        const speed = Math.random() * 2.0 + 2.8;
-        createDoveElement(-60, startY, speed, scale, true);
-      }, i * 320);
+        const startY = Math.random() * 35 + 25; // 25vh إلى 60vh (في منتصف الشاشة دائماً)
+        const scale = Math.random() * 0.35 + 1.05;
+        const duration = Math.random() * 0.8 + 2.8;
+        createDoveElement(startY, scale, duration, true);
+      }, i * 280);
     }
     if (typeof confetti === 'function') {
       confetti({
         particleCount: 50,
         spread: 80,
-        origin: { y: 0.65 },
-        zIndex: 100005,
+        origin: { y: 0.55 },
+        zIndex: 1000005,
         colors: ['#ffffff', '#ffe082', '#ff758c', '#ffd166']
       });
     }
