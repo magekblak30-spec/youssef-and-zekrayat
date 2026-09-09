@@ -599,6 +599,7 @@ document.addEventListener('DOMContentLoaded', () => {
         particleCount: 140,
         spread: 90,
         origin: { y: 0.6 },
+        zIndex: 100005,
         colors: ['#ff4d6d', '#ffd166', '#ff758c', '#ffffff', '#d4af37', '#f72585']
       });
     }
@@ -610,7 +611,7 @@ document.addEventListener('DOMContentLoaded', () => {
     setTimeout(() => {
       introScreen.classList.add('opened');
       fireworksBlast();
-    }, 1300);
+    }, 2200);
   }
 
   function handleEnvelopeInteraction() {
@@ -723,22 +724,25 @@ document.addEventListener('DOMContentLoaded', () => {
 
   function releaseFlockOfDoves() {
     audio.playChime(880, 'triangle', 0.8);
+    const vh = window.innerHeight || 600;
     for (let i = 0; i < 7; i++) {
       setTimeout(() => {
-        const startY = Math.random() * 300 + 80;
-        const scale = Math.random() * 0.4 + 0.9;
-        const speed = Math.random() * 1.8 + 2.5;
-        createDoveElement(-50, startY, speed, scale, true);
-      }, i * 350);
+        const startY = Math.random() * (vh * 0.45) + (vh * 0.15);
+        const scale = Math.random() * 0.4 + 0.95;
+        const speed = Math.random() * 2.0 + 2.8;
+        createDoveElement(-60, startY, speed, scale, true);
+      }, i * 320);
     }
     if (typeof confetti === 'function') {
       confetti({
-        particleCount: 35,
-        spread: 70,
-        origin: { y: 0.8 },
-        colors: ['#ffffff', '#ffe082', '#ff758c']
+        particleCount: 50,
+        spread: 80,
+        origin: { y: 0.65 },
+        zIndex: 100005,
+        colors: ['#ffffff', '#ffe082', '#ff758c', '#ffd166']
       });
     }
+    showLockNoticeToast('أسراب الحمام الأبيض تحلق 🕊️✨', 'أطلقنا أسراب الحمام تعانق سماء الحب وتهديكِ أسمى معاني الوفاء يا ذكريات!');
   }
 
   // ب) شريط الألعاب والفعاليات الرومانسية التفاعلية لـ ذكريات
@@ -827,15 +831,13 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  // ز) إشعال شموع العشق
+  // ز) إشعال شموع العشق في الشاشة الحالية
   let candleCount = 0;
   if (toyCandlesBtn) {
     toyCandlesBtn.addEventListener('click', () => {
       audio.playChime(659.25, 'sine', 0.6);
-      const introScreen = document.getElementById('intro-screen');
-      if (!introScreen) return;
 
-      if (candleCount > 12) {
+      if (candleCount >= 16) {
         showLockNoticeToast('شموع العشق تضيء سمائنا 🕯️', 'أضأتِ أركان قلبي كلها بنور حبكِ الصادق يا ذكريات!');
         return;
       }
@@ -844,16 +846,28 @@ document.addEventListener('DOMContentLoaded', () => {
         candleCount++;
         const candle = document.createElement('div');
         candle.className = 'floating-candle';
-        candle.style.left = `${Math.random() * 85 + 5}%`;
-        candle.style.top = `${Math.random() * 60 + 20}%`;
+        // موضع ذكي داخل الشاشة المرئية مباشرة أمام المستخدم
+        const posX = Math.random() * 70 + 15; // 15% إلى 85% من عرض الشاشة
+        const posY = Math.random() * 50 + 25; // 25% إلى 75% من ارتفاع الشاشة
+        candle.style.left = `${posX}%`;
+        candle.style.top = `${posY}%`;
         candle.innerHTML = `
           <div class="candle-flame"></div>
           <div class="candle-wax"></div>
         `;
-        introScreen.appendChild(candle);
+        document.body.appendChild(candle);
+
+        // إبقاء الشموع تطفو بنعومة أمامها ثم تتلاشى بعد 12 ثانية بهدوء
+        setTimeout(() => {
+          candle.style.opacity = '0';
+          setTimeout(() => {
+            candle.remove();
+            candleCount = Math.max(0, candleCount - 1);
+          }, 1400);
+        }, 12000);
       }
 
-      showLockNoticeToast('تم إشعال شموع العشق 🕯️✨', 'أشعلنا لكِ شموع الأمل والحب لتضيء درب انتظارنا المشترك!');
+      showLockNoticeToast('تم إشعال شموع العشق 🕯️✨', 'أشعلنا لكِ شموع الأمل والحب لتضيء شاشتكِ وقلبكِ يا ذكريات!');
     });
   }
 
@@ -947,10 +961,40 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
+  function spawnLetterPetalsAndHearts() {
+    const layer = document.getElementById('letter-petals-layer');
+    if (!layer) return;
+    const symbols = ['🌹', '🌸', '💖', '✨', '💕', '❤️', '🌺', '🌷', '💓'];
+    for (let i = 0; i < 28; i++) {
+      setTimeout(() => {
+        const el = document.createElement('div');
+        el.className = 'letter-falling-item';
+        el.textContent = symbols[Math.floor(Math.random() * symbols.length)];
+        el.style.left = `${Math.random() * 88 + 6}%`;
+        el.style.top = `-25px`;
+        el.style.fontSize = `${Math.random() * 1.3 + 1.2}rem`;
+        el.style.animationDuration = `${Math.random() * 2 + 2.4}s`;
+        layer.appendChild(el);
+        setTimeout(() => el.remove(), 4500);
+      }, i * 90);
+    }
+  }
+
   if (modalSparkleBtn) {
     modalSparkleBtn.addEventListener('click', () => {
       audio.playChime(987.77, 'triangle', 0.9);
-      heartExplosion();
+      // 1. تساقط بتلات الورد والقلوب داخل ورقة الرسالة نفسها أمام النص
+      spawnLetterPetalsAndHearts();
+      // 2. كنفيتي علوي لا يختفي وراء نافذة الرسالة
+      if (typeof confetti === 'function') {
+        confetti({
+          particleCount: 120,
+          spread: 90,
+          origin: { y: 0.55 },
+          zIndex: 100005,
+          colors: ['#ff0844', '#ffb199', '#ff4d6d', '#ffd166', '#ffffff']
+        });
+      }
     });
   }
 
@@ -969,6 +1013,7 @@ document.addEventListener('DOMContentLoaded', () => {
         angle: 60,
         spread: 60,
         origin: { x: 0, y: 0.7 },
+        zIndex: 100005,
         colors: colors
       });
       confetti({
@@ -976,6 +1021,7 @@ document.addEventListener('DOMContentLoaded', () => {
         angle: 120,
         spread: 60,
         origin: { x: 1, y: 0.7 },
+        zIndex: 100005,
         colors: colors
       });
 
@@ -992,6 +1038,7 @@ document.addEventListener('DOMContentLoaded', () => {
       particleCount: 180,
       spread: 120,
       origin: { y: 0.5 },
+      zIndex: 100005,
       colors: ['#ff0844', '#ffb199', '#ff4d6d', '#ffd166', '#ffffff']
     });
 

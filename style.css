@@ -158,53 +158,64 @@ body {
 .letter-preview {
   position: absolute;
   top: 15px;
-  left: 20px;
-  right: 20px;
+  left: 18px;
+  right: 18px;
   bottom: 15px;
-  background: #fffdf9;
-  border-radius: 10px;
-  padding: 16px;
+  background: #fffdf7;
+  border: 1.5px solid #ecd3be;
+  border-radius: 12px;
+  padding: 16px 12px;
   color: #2b1123;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   text-align: center;
-  box-shadow: 0 5px 20px rgba(0,0,0,0.25);
-  transition: transform 0.9s cubic-bezier(0.16, 1, 0.3, 1) 0.3s;
+  box-shadow: 0 8px 25px rgba(0,0,0,0.35);
+  transition: transform 0.9s cubic-bezier(0.16, 1, 0.3, 1) 0.3s, z-index 0.3s 0.6s, box-shadow 0.6s;
   z-index: 2;
 }
 
 .envelope.open .letter-preview {
-  transform: translateY(-95px);
+  transform: translateY(-135px);
+  z-index: 10;
+  box-shadow: 0 16px 45px rgba(0,0,0,0.55), 0 0 25px rgba(255, 77, 109, 0.3);
 }
 
 .letter-stamp {
-  width: 42px;
-  height: 42px;
+  width: 44px;
+  height: 44px;
   border-radius: 50%;
-  background: var(--rose-primary);
-  color: #ffd166;
+  background: linear-gradient(135deg, #ff4d6d, #d4af37);
+  color: #ffffff;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 1.2rem;
+  font-size: 1.25rem;
   margin-bottom: 8px;
-  box-shadow: 0 4px 12px rgba(255, 77, 109, 0.45);
+  box-shadow: 0 4px 14px rgba(255, 77, 109, 0.5);
 }
 
 .letter-preview-text {
   font-family: var(--font-poetry);
-  font-size: 1.3rem;
-  font-weight: 700;
-  color: #4a1532;
-  margin-bottom: 4px;
+  font-size: 1.35rem;
+  font-weight: 800;
+  color: #2b0b1f;
+  margin-bottom: 6px;
+  line-height: 1.35;
+  text-shadow: 0 1px 1px rgba(255,255,255,0.9);
 }
 
 .letter-preview-sub {
-  font-size: 0.82rem;
-  color: #8b5a76;
-  font-weight: 600;
+  font-size: 0.92rem;
+  color: #5c1c38;
+  font-weight: 700;
+  background: rgba(255, 77, 109, 0.12);
+  border: 1px solid rgba(255, 77, 109, 0.28);
+  padding: 4px 14px;
+  border-radius: 20px;
+  display: inline-block;
+  white-space: nowrap;
 }
 
 .envelope-front {
@@ -1648,6 +1659,7 @@ body {
 
 .parchment-paper {
   position: relative;
+  overflow: hidden;
   background: #fdfbf7;
   background-image: radial-gradient(#f4ebd9 15%, transparent 16%), radial-gradient(#eddcc4 15%, transparent 16%);
   background-size: 60px 60px;
@@ -1657,6 +1669,45 @@ body {
   padding: 48px 40px 38px;
   color: #3b1828;
   box-shadow: 0 25px 65px rgba(0,0,0,0.85), inset 0 0 45px rgba(189, 144, 106, 0.35);
+}
+
+.letter-petals-layer {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  overflow: hidden;
+  z-index: 15;
+  border-radius: 14px;
+}
+
+.letter-falling-item {
+  position: absolute;
+  pointer-events: none;
+  user-select: none;
+  will-change: transform, opacity;
+  animation: fallInsideLetter linear forwards;
+  filter: drop-shadow(0 2px 8px rgba(255, 77, 109, 0.45));
+}
+
+@keyframes fallInsideLetter {
+  0% {
+    opacity: 0;
+    transform: translateY(-30px) rotate(0deg) scale(0.6);
+  }
+  15% {
+    opacity: 1;
+    transform: translateY(20px) rotate(35deg) scale(1.15);
+  }
+  85% {
+    opacity: 0.95;
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(700px) rotate(360deg) scale(0.9);
+  }
 }
 
 .letter-header {
@@ -1838,6 +1889,22 @@ body {
   .envelope {
     width: 290px;
     height: 200px;
+  }
+
+  .envelope.open .letter-preview {
+    transform: translateY(-118px);
+    z-index: 10;
+  }
+
+  .letter-preview-text {
+    font-size: 1.15rem;
+    line-height: 1.35;
+    margin-bottom: 5px;
+  }
+
+  .letter-preview-sub {
+    font-size: 0.8rem;
+    padding: 3px 10px;
   }
 
   .envelope-front {
@@ -2029,14 +2096,14 @@ body {
    أسراب الحمام الأبيض في سماء بوابة القفل (White Doves Flight System)
    ========================================================================== */
 .doves-sky-layer {
-  position: absolute;
+  position: fixed;
   top: 0;
   left: 0;
-  width: 100%;
-  height: 100%;
+  width: 100vw;
+  height: 100vh;
   pointer-events: none;
   overflow: hidden;
-  z-index: 1;
+  z-index: 100000;
 }
 
 .sky-dove {
@@ -2211,32 +2278,34 @@ body {
 
 /* شموع العشق العائمة */
 .floating-candle {
-  position: absolute;
-  width: 20px;
-  height: 38px;
+  position: fixed;
+  width: 26px;
+  height: 48px;
   display: flex;
   flex-direction: column;
   align-items: center;
   pointer-events: none;
-  z-index: 10;
+  z-index: 100001;
   animation: candleFloat 3s ease-in-out infinite alternate;
+  filter: drop-shadow(0 0 16px rgba(255, 209, 102, 0.9));
+  transition: opacity 1.2s ease, transform 1.2s ease;
 }
 
 .candle-wax {
-  width: 14px;
-  height: 26px;
-  background: linear-gradient(180deg, #fff3d1 0%, #ffe082 100%);
-  border-radius: 4px;
-  box-shadow: 0 4px 10px rgba(0,0,0,0.6);
+  width: 16px;
+  height: 28px;
+  background: linear-gradient(180deg, #fff9e6 0%, #ffd166 100%);
+  border-radius: 5px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.6);
 }
 
 .candle-flame {
-  width: 10px;
-  height: 16px;
+  width: 12px;
+  height: 20px;
   background: radial-gradient(circle at 50% 80%, #ffffff 0%, #ffd166 40%, #ff4d6d 80%, transparent 100%);
   border-radius: 50% 50% 35% 35%;
-  margin-bottom: -3px;
-  box-shadow: 0 0 16px #ffd166, 0 0 30px #ff4d6d;
+  margin-bottom: -4px;
+  box-shadow: 0 0 18px #ffd166, 0 0 35px #ff4d6d;
   animation: candleFlicker 0.4s ease-in-out infinite alternate;
 }
 
