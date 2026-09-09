@@ -1,0 +1,674 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ذكرى عيد زواجنا الرابع السعيد | يوسف ❤️ ذكريات | 1 أكتوبر 2026</title>
+  
+  <!-- خطوط عربية ملكية وفاخرة -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400;1,700&family=Cairo:wght@300;400;600;700;800;900&family=Marhey:wght@400;600;700&family=Reem+Kufi:wght@500;700&display=swap" rel="stylesheet">
+  
+  <!-- مكتبة الأيقونات Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  
+  <!-- ستايل الصفحة الملكي V2 -->
+  <link rel="stylesheet" href="style.css">
+  
+  <!-- مكتبة الألعاب النارية والكنفيتي -->
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js"></script>
+
+  <!-- تحميل مسبق في الخلفية لصور الذكريات الملكية -->
+  <link rel="preload" as="image" href="images/أول لقاء وصدفة القدر السعيدة.JPG">
+  <link rel="preload" as="image" href="images/اليوم الأجمل في التاريخ.jpeg">
+  <link rel="preload" as="image" href="images/العالم كله أجمل معكِ يا ذكريات.jpeg">
+  <link rel="preload" as="image" href="images/أعظم عهد قطعه قلبي لذكريات.jpeg">
+</head>
+<body class="royal-theme">
+
+  <!-- كانفاس النجوم والقلوب وبتلات الورد المتطايرة ثلاثية الأبعاد -->
+  <canvas id="ambient-canvas"></canvas>
+
+  <!-- شاشة قفل الهدية الملكية بالعداد الخارجي (The Royal Gate Lock Screen) -->
+  <div id="intro-screen" class="intro-screen">
+    <div class="intro-backdrop"></div>
+    
+    <!-- طبقة أسراب الحمام الأبيض الطائر في السماء -->
+    <div id="doves-sky-layer" class="doves-sky-layer" aria-hidden="true"></div>
+
+    <div class="intro-content-container">
+      
+      <!-- شريط القفل واللقب الملكي -->
+      <div class="lock-gate-badge">
+        <i class="fa-solid fa-lock" id="gate-lock-icon"></i>
+        <span>مفاجأة عيد زواجنا الرابع • يوسف & ذكريات</span>
+      </div>
+
+      <h1 class="lock-gate-title">
+        هدية محفوفة بالعهد والعشق لحبيبتي <span class="gold-shimmer-text">"ذكريات"</span>
+      </h1>
+
+      <p class="lock-gate-sub">
+        الهدية مقفلة ومحفوظة بأمر الحب.. وتُفتح تلقائياً بمجرد حلول موعد عيد زواجنا السعيد
+      </p>
+
+      <!-- بطاقة العداد الحي الخارجي المتوهجة -->
+      <div class="countdown-card lock-countdown">
+        <div class="card-glass-glow"></div>
+        <div class="countdown-header">
+          <i class="fa-solid fa-hourglass-start fa-spin-pulse"></i>
+          <h3 id="countdown-title">الوقت المتبقي حتى يحين موعد فتح الهدية (1/10/2026)</h3>
+        </div>
+        <div class="timer-grid" id="timer-grid">
+          <div class="timer-box">
+            <span class="number" id="days">00</span>
+            <span class="label">يوم</span>
+          </div>
+          <div class="timer-separator">:</div>
+          <div class="timer-box">
+            <span class="number" id="hours">00</span>
+            <span class="label">ساعة</span>
+          </div>
+          <div class="timer-separator">:</div>
+          <div class="timer-box">
+            <span class="number" id="minutes">00</span>
+            <span class="label">دقيقة</span>
+          </div>
+          <div class="timer-separator">:</div>
+          <div class="timer-box">
+            <span class="number" id="seconds">00</span>
+            <span class="label">ثانية</span>
+          </div>
+        </div>
+        <p class="timer-footer">مع كل ثانية تدق.. يقترب موعدنا السعيد لتجديد عهد العشق الأبدي 💕</p>
+      </div>
+
+      <!-- واحة العشق والتسلية لـ ذكريات حتى يحين موعد عيد الزواج -->
+      <section class="romantic-lounge-container" id="romantic-lounge" aria-label="واحة التسلية الرومانسية">
+        
+        <div class="lounge-header">
+          <div class="lounge-badge">
+            <i class="fa-solid fa-wand-magic-sparkles fa-beat"></i>
+            <span>فعاليات وألعاب العشق لملكة قلبي ذكريات 💕</span>
+          </div>
+          <h2 class="lounge-title">لحظات دافئة تتسلين بها حتى تدق ساعة فرحتنا</h2>
+          <p class="lounge-subtitle">بينما ننتظر حلول موعدنا الأجمل.. استمتعي بهذه الأنشطة والهمسات الرومانسية المهداة من قلب يوسف</p>
+        </div>
+
+        <!-- شريط الألعاب والفعاليات الرومانسية التفاعلية لتتسلى بها ذكريات -->
+        <div class="romance-toys-bar">
+          <div class="toys-bar-title">
+            <i class="fa-solid fa-heart-circle-bolt"></i>
+            <span>فعاليات وألعاب رومانسية لتتسلّي بها يا ذكريات:</span>
+          </div>
+          <div class="toys-buttons-grid">
+            <button class="toy-btn" id="toy-doves-btn" title="أطلقي أسراب الحمام الأبيض">
+              <div class="toy-icon">🕊️</div>
+              <div class="toy-text">
+                <strong>أطلقي سرب الحمام</strong>
+                <small>حمام أبيض يرفرف بالحب</small>
+              </div>
+            </button>
+
+            <button class="toy-btn" id="toy-roses-btn" title="انثري بتلات الورد الأحمر">
+              <div class="toy-icon">🌹</div>
+              <div class="toy-text">
+                <strong>انثري بتلات الورد</strong>
+                <small>أمطار من الورد المخملي</small>
+              </div>
+            </button>
+
+            <button class="toy-btn" id="toy-heartbeat-btn" title="استمعي لنبض قلب يوسف">
+              <div class="toy-icon">💓</div>
+              <div class="toy-text">
+                <strong>استمعي لنبض قلبي</strong>
+                <small>نبضات حقيقية بحبكِ</small>
+              </div>
+            </button>
+
+            <button class="toy-btn" id="toy-whisper-btn" title="همسة غزل خاصة لـ ذكريات">
+              <div class="toy-icon">💌</div>
+              <div class="toy-text">
+                <strong>همسة غزل خاصة</strong>
+                <small>كلمات تذيب الفؤاد</small>
+              </div>
+            </button>
+
+            <button class="toy-btn" id="toy-candles-btn" title="أشعلي شموع عيد زواجنا">
+              <div class="toy-icon">🕯️</div>
+              <div class="toy-text">
+                <strong>أشعلي شموع العشق</strong>
+                <small>أضواء دافئة حالمة</small>
+              </div>
+            </button>
+          </div>
+        </div>
+
+      </section>
+
+      <!-- ظرف الحب الملكي المختوم -->
+      <div class="envelope-wrapper">
+        <div class="envelope-glow"></div>
+        <div class="envelope" id="envelope">
+          <div class="envelope-back"></div>
+          <div class="letter-preview">
+            <div class="letter-stamp"><i class="fa-solid fa-crown"></i></div>
+            <p class="letter-preview-text">إلى ملكة قلبي ونور حياتي "ذكريات"..</p>
+            <span class="letter-preview-sub">من حبيبكِ ورفيق دربكِ يوسف • 1 أكتوبر 2026</span>
+          </div>
+          <div class="envelope-front"></div>
+          <div class="envelope-flap"></div>
+          <div class="wax-seal" id="wax-seal" title="ختم العشق الملكي">
+            <div class="wax-seal-inner">
+              <i class="fa-solid fa-gem"></i>
+              <span>2022 • 2026</span>
+            </div>
+          </div>
+        </div>
+        
+        <div class="intro-prompt">
+          <div class="pulse-ring" id="open-btn-pulse"></div>
+          <button class="open-btn locked" id="open-envelope-btn">
+            <i class="fa-solid fa-lock" id="btn-lock-icon"></i>
+            <span id="btn-lock-text">الهدية مغلقة حتى موعد عيد الزواج (1/10/2026)</span>
+          </button>
+          <p class="intro-hint" id="intro-hint-text">سوف ينفتح الختم تلقائياً فور دخول يوم 1 أكتوبر 2026 ✨</p>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- نافذة التنبيه الرومانسية عند محاولة الفتح قبل الموعد -->
+  <div class="lock-notice-toast" id="lock-notice-toast">
+    <div class="toast-heart"><i class="fa-solid fa-heart fa-beat"></i></div>
+    <div class="toast-content">
+      <h4>صبراً يا حبيبة قلبي ذكريات 💕</h4>
+      <p>هديتكِ ومفاجأتكِ الكبرى محفوظة ومقفلة بالحب، وستُفتح تلقائياً في أول ثانية من يوم 1 أكتوبر 2026 لتتويج عيد زواجنا الرابع!</p>
+    </div>
+  </div>
+
+  <!-- نافذة تجربة نبضات قلب يوسف الحية لتتسلى بها ذكريات -->
+  <div class="heartbeat-modal" id="heartbeat-modal">
+    <div class="heartbeat-modal-backdrop" id="heartbeat-backdrop"></div>
+    <div class="heartbeat-modal-card">
+      <button class="heartbeat-close-btn" id="heartbeat-close-btn" title="إغلاق">&times;</button>
+      <div class="heartbeat-pulse-visual">
+        <div class="pulse-aura-ring ring-1"></div>
+        <div class="pulse-aura-ring ring-2"></div>
+        <div class="beating-heart-core" id="beating-heart-core">
+          <i class="fa-solid fa-heart"></i>
+        </div>
+      </div>
+      <div class="heartbeat-ecg-line">
+        <svg viewBox="0 0 500 80" class="ecg-svg">
+          <path d="M0 40 L160 40 L175 15 L190 65 L205 10 L220 55 L235 40 L500 40" class="ecg-path"/>
+        </svg>
+      </div>
+      <h3 class="heartbeat-title">استمعي لنبضات قلب حبيبكِ يوسف</h3>
+      <p class="heartbeat-sub">كل نبضة تدق في صدري منذ 1/10/2022 تنطق باسمكِ وحدكِ يا ذكريات</p>
+      <div class="bpm-indicator">
+        <span class="bpm-num" id="bpm-counter">120</span>
+        <span class="bpm-unit">نبضة عشق في الدقيقة</span>
+      </div>
+      <div class="heartbeat-quote" id="heartbeat-quote">
+        "لو فتّشوا قلبي لوجدوا في كل شريان خيطاً من نور عينيكِ، وفي كل خفقة اسماً لا يتكرر: ذكريات."
+      </div>
+      <button class="heartbeat-sound-toggle" id="heartbeat-sound-toggle">
+        <i class="fa-solid fa-volume-high"></i> الصوت الرومانسي للنبض شغال الآن
+      </button>
+    </div>
+  </div>
+
+  <!-- مشغل الموسيقى الرومانسي العائم مع أسطوانة الفينيل الذهبية -->
+  <div class="music-controller" id="music-controller">
+    <button class="music-btn" id="music-toggle" title="تشغيل / إيقاف اللحن الرومانسي">
+      <div class="vinyl-disc" id="vinyl-disc">
+        <div class="vinyl-core"></div>
+      </div>
+      <div class="music-equalizer" id="equalizer">
+        <span></span><span></span><span></span><span></span>
+      </div>
+    </button>
+    <div class="music-tooltip" id="music-tooltip">لحن عشق يوسف وذكريات 🎵</div>
+  </div>
+
+  <!-- المحتوى الرئيسي للموقع الملكي -->
+  <main id="main-content" class="main-content">
+
+    <!-- القسم الرئيسي الفاخر (Hero Section V2) -->
+    <header class="hero-section">
+      <div class="floating-badge">
+        <i class="fa-solid fa-ring"></i>
+        <span>4 أعوام من تتويج العشق • 2022 - 2026</span>
+      </div>
+
+      <h1 class="hero-title">
+        كل عام وأنتِ يا <span class="gold-shimmer-text">ذكريات</span> حياة قلبي وأجمل أقداري
+      </h1>
+
+      <p class="hero-subtitle">
+        اسمكِ "ذكريات".. لكنكِ في قلبي الحاضر الذي أتنفسه، والمستقبل الذي أرجوه، وأعظم نعم الله عليّ. أربع سنوات مرت كحلم وردي لأنكِ كنتِ رفيقة دربي فيها.
+      </p>
+
+      <!-- شريط بطاقة الحبيبين الملكي -->
+      <div class="couple-badge">
+        <div class="person husband">
+          <span class="avatar"><i class="fa-solid fa-crown"></i></span>
+          <span class="name">يوسف</span>
+          <span class="role">زوجكِ المخلص وحبيبكِ للأبد</span>
+        </div>
+        <div class="love-symbol">
+          <div class="heart-pulse"><i class="fa-solid fa-heart"></i></div>
+          <span class="days-indicator">أربع سنوات عشق</span>
+        </div>
+        <div class="person wife">
+          <span class="avatar"><i class="fa-solid fa-spa"></i></span>
+          <span class="name" id="wife-display-name">ذكريات</span>
+          <span class="role">أميرة بيتي وسيدة قلبي</span>
+        </div>
+      </div>
+
+
+      <!-- شريط مسيرة الـ 4 سنوات الذهبية (Milestone Tracker) -->
+      <div class="years-milestone-box">
+        <div class="milestone-title"><i class="fa-solid fa-infinity"></i> محطات رحلتنا الذهبية (2022 - 2026)</div>
+        <div class="milestone-steps">
+          <div class="step completed">
+            <span class="step-year">2022</span>
+            <span class="step-desc">عقد القلوب والزفاف الأبيض</span>
+          </div>
+          <div class="step-line"></div>
+          <div class="step completed">
+            <span class="step-year">2023</span>
+            <span class="step-desc">دفء بيتنا الصغير</span>
+          </div>
+          <div class="step-line"></div>
+          <div class="step completed">
+            <span class="step-year">2024</span>
+            <span class="step-desc">مواقف العشق والسند</span>
+          </div>
+          <div class="step-line"></div>
+          <div class="step completed">
+            <span class="step-year">2025</span>
+            <span class="step-desc">نضج المودة والرحمة</span>
+          </div>
+          <div class="step-line"></div>
+          <div class="step active">
+            <span class="step-year">2026</span>
+            <span class="step-desc">عيد زواجنا الرابع وتجديد العهد</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- مؤشر النزول للأسفل -->
+      <a href="#memories-section" class="scroll-down-hint">
+        <span>اكتشفي حكايتنا وسحر ذكرياتنا</span>
+        <i class="fa-solid fa-angles-down"></i>
+      </a>
+    </header>
+
+    <!-- قسم بلورة همسات العشق السحرية (Interactive Love Whispers) -->
+    <section class="section whispers-section">
+      <div class="whispers-card">
+        <div class="whispers-badge"><i class="fa-solid fa-wand-magic-sparkles"></i> بلورة همسات يوسف</div>
+        <h2 class="whispers-heading">ماذا يقول قلبي لكِ في هذه اللحظة؟</h2>
+        <p class="whispers-sub">اضغطي على القلب البلوري لتكتشفي همسة حب جديدة كُتبت لعينيكِ</p>
+        
+        <div class="whisper-display-box" id="whisper-box">
+          <i class="fa-solid fa-quote-right whisper-quote-icon"></i>
+          <p id="whisper-text">"أنتِ النعمة التي لا تنتهي، والقدر الذي أحمد ربي عليه في كل سجدة يا ذكريات عمري."</p>
+        </div>
+
+        <button class="whisper-btn" id="whisper-btn">
+          <i class="fa-solid fa-heart fa-beat"></i>
+          <span>اكشفي همسة حب جديدة ✨</span>
+        </button>
+      </div>
+    </section>
+
+    <!-- قسم الخط الزمني: حكايتنا معاً (Timeline & Memory Lane) -->
+    <section class="section memories-section" id="memories-section">
+      <div class="section-heading">
+        <span class="section-tag"><i class="fa-solid fa-bookmark"></i> صفحات من كتاب عمرنا</span>
+        <h2 class="section-title">محطات صنعت <span class="gold-shimmer-text">حكايتنا الخالدة</span></h2>
+        <p class="section-desc">كل لحظة معكِ يا ذكريات هي جوهرة ثمينة محفورة في وجداني إلى الأبد، والتقاطة تروي عهد حبنا</p>
+      </div>
+
+      <div class="timeline">
+        <!-- المحطة الأولى: أول لقاء وصدفة القدر السعيدة -->
+        <div class="timeline-item">
+          <div class="timeline-dot"><i class="fa-solid fa-sparkles"></i></div>
+          <div class="timeline-card">
+            <div class="timeline-date">أول لقاء وصدفة القدر السعيدة</div>
+            <h3 class="timeline-title">اليوم الذي أضاءت فيه "ذكريات" حياتي</h3>
+            <p class="timeline-text">
+              حين نظرت في عينيكِ لأول مرة، شعرت أن العالم كله توقف عن الدوران.. علمت في تلك اللحظة أنني عثرت على وطني ونصفي الآخر الذي طالما تمنيته، وبدأت معكِ أجمل فصول حياتي.
+            </p>
+            <div class="card-polaroid">
+              <div class="polaroid-photo">
+                <img src="images/أول لقاء وصدفة القدر السعيدة.JPG" alt="أول لقاء وصدفة القدر السعيدة" class="slide-img" onclick="openLightbox(this.src, 'أول لقاء وصدفة القدر السعيدة - يوسف وذكريات')">
+              </div>
+              <div class="polaroid-caption">"وكانت أحلى صدفة جمعت يوسف بذكريات"</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- المحطة الثانية: يوم الزفاف الخالد (1 أكتوبر 2022) -->
+        <div class="timeline-item reversed">
+          <div class="timeline-dot highlight"><i class="fa-solid fa-ring"></i></div>
+          <div class="timeline-card highlight-card">
+            <div class="badge-special">اليوم الأجمل في التاريخ</div>
+            <div class="timeline-date">1 أكتوبر 2022 • يوم تتويج حبنا</div>
+            <h3 class="timeline-title">يوم أصبحتِ زوجتي وحلالي ونور بيتي</h3>
+            <p class="timeline-text">
+              يوم زفافنا كان أعظم يوم خفق به قلبي، وقفت أنظر إليكِ يا ذكريات وأنتِ كالملاك بفستانكِ الأبيض وأيقنت أن دعواتي كلها استجيبت. عاهدتكِ أن أسعدكِ وسأظل على هذا العهد ما حييت.
+            </p>
+            <div class="card-polaroid">
+              <div class="polaroid-photo">
+                <img src="images/اليوم الأجمل في التاريخ.jpeg" alt="اليوم الأجمل في التاريخ" class="slide-img" onclick="openLightbox(this.src, 'اليوم الأجمل في التاريخ - 1 أكتوبر 2022')">
+              </div>
+              <div class="polaroid-caption">"1 / 10 / 2022 - عهد العشق الأبدي"</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- المحطة الثالثة: تفاصيل بيتنا وسعادتنا اليومية -->
+        <div class="timeline-item">
+          <div class="timeline-dot"><i class="fa-solid fa-mug-hot"></i></div>
+          <div class="timeline-card">
+            <div class="timeline-date">تفاصيل بيتنا وسعادتنا اليومية</div>
+            <h3 class="timeline-title">ضحكاتنا ودفء بيتنا الصغير</h3>
+            <p class="timeline-text">
+              فنجان القهوة من يديكِ، صوت ضحكتكِ الذي يملأ أركان البيت بهجة، حديثنا في المساء ومواقفنا التي لا تُنسى.. في كل تفصيلة أكتشف أنكِ نعمتي الكبرى التي لا تعوّض.
+            </p>
+            <div class="card-polaroid">
+              <div class="polaroid-photo">
+                <img src="images/ضحكاتنا ودفء بيتنا الصغير.jpeg" alt="ضحكاتنا ودفء بيتنا الصغير" class="slide-img" onclick="openLightbox(this.src, 'ضحكاتنا ودفء بيتنا الصغير - يوسف وذكريات')">
+              </div>
+              <div class="polaroid-caption">"البيت ليس جدراناً.. بيتي هو أنتِ يا ذكريات"</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- المحطة الرابعة: عهد للمستقبل وما بعده -->
+        <div class="timeline-item reversed">
+          <div class="timeline-dot"><i class="fa-solid fa-star"></i></div>
+          <div class="timeline-card">
+            <div class="timeline-date">عهد للمستقبل وما بعده</div>
+            <h3 class="timeline-title">إلى ما لا نهاية وما بعدها</h3>
+            <p class="timeline-text">
+              مهما دارت الأيام وتوالت السنون، ستبقين أنتِ الفتاة التي يدق قلبي باسمها، وسأظل يوسف الذي يحميكِ ويحبكِ ويعشقكِ بكل ما أوتي من قوة.
+            </p>
+            <div class="card-polaroid">
+              <div class="polaroid-photo">
+                <img src="images/عهد للمستقبل وما بعده.jpeg" alt="عهد للمستقبل وما بعده" class="slide-img" onclick="openLightbox(this.src, 'عهد للمستقبل وما بعده - يوسف وذكريات')">
+              </div>
+              <div class="polaroid-caption">"أنتِ البداية التي لا تعرف النهاية"</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- قسم بطاقات العشق التفاعلية (Why I Love You) -->
+    <section class="section love-reasons-section">
+      <div class="section-heading">
+        <span class="section-tag"><i class="fa-solid fa-heart-pulse"></i> أسرار قلبي</span>
+        <h2 class="section-title">لماذا يعشق يوسف <span class="gold-shimmer-text">ذكريات</span> في كل لحظة؟</h2>
+        <p class="section-desc">المسي أو اضغطي على أي بطاقة لتري ما ينبض به قلبي نحوكِ</p>
+      </div>
+
+      <div class="reasons-grid">
+        <!-- كارت 1 -->
+        <div class="flip-card">
+          <div class="flip-card-inner">
+            <div class="flip-card-front">
+              <div class="card-icon"><i class="fa-solid fa-eye"></i></div>
+              <h3>سحر عينيكِ</h3>
+              <span class="tap-hint">المسي البطاقة ✨</span>
+            </div>
+            <div class="flip-card-back">
+              <i class="fa-solid fa-quote-right quote-mark"></i>
+              <p>في عينيكِ يا ذكريات أرى الأمان والسلام الذي بحثت عنه طوال حياتي، نظرة واحدة منكِ تمحو كل أتعاب العالم وتبدل خوفي طمأنينة.</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- كارت 2 -->
+        <div class="flip-card">
+          <div class="flip-card-inner">
+            <div class="flip-card-front">
+              <div class="card-icon"><i class="fa-solid fa-face-smile-beam"></i></div>
+              <h3>ابتسامتكِ الشافية</h3>
+              <span class="tap-hint">المسي البطاقة ✨</span>
+            </div>
+            <div class="flip-card-back">
+              <i class="fa-solid fa-quote-right quote-mark"></i>
+              <p>حين تبتسمين تشرق روحي كأن الشمس قد بزغت في قلبي.. ضحكتكِ هي النغمة التي تسعد بيتي وتهدئ روحي في أصعب الأوقات.</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- كارت 3 -->
+        <div class="flip-card">
+          <div class="flip-card-inner">
+            <div class="flip-card-front">
+              <div class="card-icon"><i class="fa-solid fa-hand-holding-heart"></i></div>
+              <h3>نقاء قلبكِ وحنانكِ</h3>
+              <span class="tap-hint">المسي البطاقة ✨</span>
+            </div>
+            <div class="flip-card-back">
+              <i class="fa-solid fa-quote-right quote-mark"></i>
+              <p>قلبكِ الأبيض الصافي واحتواؤكِ لي في كل أوقاتي يجعلني أسجد لله شكراً أن جعل "ذكريات" زوجتي وقسمتي وأجمل ما في دنياي.</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- كارت 4 -->
+        <div class="flip-card">
+          <div class="flip-card-inner">
+            <div class="flip-card-front">
+              <div class="card-icon"><i class="fa-solid fa-shield-heart"></i></div>
+              <h3>أنكِ سندي ورفيقتي</h3>
+              <span class="tap-hint">المسي البطاقة ✨</span>
+            </div>
+            <div class="flip-card-back">
+              <i class="fa-solid fa-quote-right quote-mark"></i>
+              <p>أنتِ لستِ فقط زوجتي، بل أعز أصدقائي وشريكتي التي أثق بها وأشعر معها بالقوة والاطمئنان دائماً وأبداً ما حييت.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- قسم معرض الصور والألبومات الدوارة التلقائية (Auto-Rotating Slideshows) -->
+    <section class="section gallery-section">
+      <div class="section-heading">
+        <span class="section-tag"><i class="fa-solid fa-camera-retro"></i> ألبوم حبنا المتجدد</span>
+        <h2 class="section-title">أجمل لقطات <span class="gold-shimmer-text">يوسف وذكريات</span></h2>
+        <p class="section-desc">أجمل اللحظات التي وثقتها قلوبنا في مسيرة حبنا الخالدة ✨</p>
+      </div>
+
+      <div class="gallery-grid" id="gallery-grid">
+        <!-- كارت 1: أعظم عهد قطعه قلبي لذكريات (3 صور تتقلب كل ثانيتين) -->
+        <div class="gallery-item tilt-item">
+          <div class="gallery-card">
+            <div class="gallery-img-wrapper slideshow-container" data-interval="2000">
+              <div class="slide-item active">
+                <img src="images/أعظم عهد قطعه قلبي لذكريات.jpeg" alt="أعظم عهد قطعه قلبي لذكريات 1" class="slide-img" onclick="openLightbox(this.src, 'أعظم عهد قطعه قلبي لذكريات')">
+              </div>
+              <div class="slide-item">
+                <img src="images/أعظم عهد قطعه قلبي لذكريات (2).jpeg" alt="أعظم عهد قطعه قلبي لذكريات 2" class="slide-img" onclick="openLightbox(this.src, 'أعظم عهد قطعه قلبي لذكريات')">
+              </div>
+              <div class="slide-item">
+                <img src="images/أعظم عهد قطعه قلبي لذكريات (3).jpeg" alt="أعظم عهد قطعه قلبي لذكريات 3" class="slide-img" onclick="openLightbox(this.src, 'أعظم عهد قطعه قلبي لذكريات')">
+              </div>
+              <!-- مؤشرات الصور -->
+              <div class="slideshow-indicators"></div>
+              <div class="slide-badge"><i class="fa-solid fa-images"></i> 3 صور</div>
+            </div>
+            <div class="gallery-info">
+              <span class="tag">1 أكتوبر 2022</span>
+              <h4>أعظم عهد قطعه قلبي لذكريات</h4>
+            </div>
+          </div>
+        </div>
+
+        <!-- كارت 2: العالم كله أجمل معكِ يا ذكريات (8 صور تتقلب كل ثانيتين) -->
+        <div class="gallery-item tilt-item">
+          <div class="gallery-card">
+            <div class="gallery-img-wrapper slideshow-container" data-interval="2000">
+              <div class="slide-item active">
+                <img src="images/العالم كله أجمل معكِ يا ذكريات.jpeg" alt="العالم كله أجمل معكِ 1" class="slide-img" onclick="openLightbox(this.src, 'العالم كله أجمل معكِ يا ذكريات')">
+              </div>
+              <div class="slide-item">
+                <img src="images/العالم كله أجمل معكِ يا ذكريات (1).jpeg" alt="العالم كله أجمل معكِ 2" class="slide-img" onclick="openLightbox(this.src, 'العالم كله أجمل معكِ يا ذكريات')">
+              </div>
+              <div class="slide-item">
+                <img src="images/العالم كله أجمل معكِ يا ذكريات (2).jpeg" alt="العالم كله أجمل معكِ 3" class="slide-img" onclick="openLightbox(this.src, 'العالم كله أجمل معكِ يا ذكريات')">
+              </div>
+              <div class="slide-item">
+                <img src="images/العالم كله أجمل معكِ يا ذكريات (3).jpeg" alt="العالم كله أجمل معكِ 4" class="slide-img" onclick="openLightbox(this.src, 'العالم كله أجمل معكِ يا ذكريات')">
+              </div>
+              <div class="slide-item">
+                <img src="images/العالم كله أجمل معكِ يا ذكريات (4).jpeg" alt="العالم كله أجمل معكِ 5" class="slide-img" onclick="openLightbox(this.src, 'العالم كله أجمل معكِ يا ذكريات')">
+              </div>
+              <div class="slide-item">
+                <img src="images/العالم كله أجمل معكِ يا ذكريات (5).jpeg" alt="العالم كله أجمل معكِ 6" class="slide-img" onclick="openLightbox(this.src, 'العالم كله أجمل معكِ يا ذكريات')">
+              </div>
+              <div class="slide-item">
+                <img src="images/العالم كله أجمل معكِ يا ذكريات (6).jpeg" alt="العالم كله أجمل معكِ 7" class="slide-img" onclick="openLightbox(this.src, 'العالم كله أجمل معكِ يا ذكريات')">
+              </div>
+              <div class="slide-item">
+                <img src="images/العالم كله أجمل معكِ يا ذكريات (7).jpeg" alt="العالم كله أجمل معكِ 8" class="slide-img" onclick="openLightbox(this.src, 'العالم كله أجمل معكِ يا ذكريات')">
+              </div>
+              <!-- مؤشرات الصور -->
+              <div class="slideshow-indicators"></div>
+              <div class="slide-badge"><i class="fa-solid fa-images"></i> 8 صور</div>
+            </div>
+            <div class="gallery-info">
+              <span class="tag">ذكريات السفر والرحلات</span>
+              <h4>العالم كله أجمل معكِ يا ذكريات</h4>
+            </div>
+          </div>
+        </div>
+
+        <!-- كارت 3: ضحكات نابعة من الوجدان (3 صور تتقلب كل ثانيتين) -->
+        <div class="gallery-item tilt-item">
+          <div class="gallery-card">
+            <div class="gallery-img-wrapper slideshow-container" data-interval="2000">
+              <div class="slide-item active">
+                <img src="images/ضحكات نابعة من الوجدان.jpeg" alt="ضحكات نابعة من الوجدان 1" class="slide-img" onclick="openLightbox(this.src, 'ضحكات نابعة من الوجدان')">
+              </div>
+              <div class="slide-item">
+                <img src="images/ضحكات نابعة من الوجدان (2).jpeg" alt="ضحكات نابعة من الوجدان 2" class="slide-img" onclick="openLightbox(this.src, 'ضحكات نابعة من الوجدان')">
+              </div>
+              <div class="slide-item">
+                <img src="images/ضحكات نابعة من الوجدان.png" alt="ضحكات نابعة من الوجدان 3" class="slide-img" onclick="openLightbox(this.src, 'ضحكات نابعة من الوجدان')">
+              </div>
+              <!-- مؤشرات الصور -->
+              <div class="slideshow-indicators"></div>
+              <div class="slide-badge"><i class="fa-solid fa-images"></i> 3 صور</div>
+            </div>
+            <div class="gallery-info">
+              <span class="tag">لحظات خاصة من القلب</span>
+              <h4>ضحكات نابعة من الوجدان</h4>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- قسم المفاجأة والرسالة الملكية السرية من يوسف لذكريات (The Royal Golden Vault) -->
+    <section class="section secret-letter-section">
+      <div class="secret-box-wrapper">
+        <div class="secret-glow-bg"></div>
+        <div class="secret-box">
+          <div class="lock-icon-wrapper" id="lock-trigger">
+            <div class="pulsing-halo"></div>
+            <div class="lock-circle">
+              <i class="fa-solid fa-lock" id="lock-icon"></i>
+            </div>
+          </div>
+
+          <h2 class="secret-title">رسالة سرية خاصة جداً من يوسف إلى ذكريات</h2>
+          <p class="secret-desc">
+            كتبت لكِ من أعماق روحي كلماتٍ مقدسة تليق بمرور 4 سنوات على زواجنا، انقري لفك القفل واستلام ما باح به فؤادي
+          </p>
+
+          <button class="unlock-btn" id="unlock-letter-btn">
+            <i class="fa-solid fa-key"></i>
+            <span>افتحي رسالة يوسف السرية</span>
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- الفوتر الملكي الفاخر -->
+    <footer class="romantic-footer">
+      <div class="footer-heart"><i class="fa-solid fa-heart fa-beat"></i></div>
+      <p class="footer-text">
+        صُنعت هذه التحفة الملكية بكل نبضة حب خصيصاً لأميرة قلبي <strong>"ذكريات"</strong> احتفالاً بـ 4 سنوات من تتويج زواجنا السعيد (1/10/2026)
+      </p>
+      <p class="footer-subtext">
+        زوجكِ وحبيبكِ المخلص للأبد: <strong>يوسف</strong> ❤️
+      </p>
+    </footer>
+
+  </main>
+
+  <!-- نافذة الرسالة السرية الفخمة المنبثقة (Modal) -->
+  <div class="modal-overlay" id="letter-modal">
+    <div class="letter-modal-content">
+      <button class="modal-close" id="modal-close-btn">&times;</button>
+      <div class="parchment-paper">
+        <div class="parchment-border"></div>
+        <div class="letter-header">
+          <div class="ornament"><i class="fa-solid fa-feather-pointed"></i></div>
+          <h3>من يوسف إلى حبيبته "ذكريات" بمناسبة 4 سنوات من العشق</h3>
+          <span class="letter-date">ذكرى زواجنا • 1 أكتوبر 2026</span>
+        </div>
+        <div class="letter-body">
+          <p>
+            حبيبتي ذكريات،،<br>
+            يا أجمل أقداري، وأطهر ما رأت عيني، وأغلى ما حظي به فؤادي..
+          </p>
+          <p>
+            أربع سنوات مضت منذ أن وقفنا معاً في مثل هذا اليوم (1/10/2022) وتعاهدنا أمام الله على المحبة والوفاء.. أربع سنوات لم أشعر فيها يوماً إلا أنني أسعد وأوفر رجال الأرض حظاً بأن جعل الله اسمكِ مقترناً باسمي.
+          </p>
+          <p>
+            يقولون إن اسمكِ "ذكريات"، وأنا أشهد أن كل يوم قضيته معكِ صنع في قلبي تاريخاً من السعادة لا يمحوه الزمن. لقد كنتِ لي السكن وقت التعب، والضحكة وقت الحزن، والوطن الذي لا أريد الهجرة منه أبداً.
+          </p>
+          <p>
+            في عيد زواجنا الرابع في هذا اليوم (1/10/2026)، أجدد لكِ العهد بقلب يزداد حبه لكِ مع كل نفس: أن أكون لكِ الأمان الذي لا يزول، والحبيب الذي لا يخذلكِ، والسند الذي يحارب الدنيا من أجل ابتسامتكِ ورضاكِ.
+          </p>
+          <div class="letter-signature">
+            حبيبك وزوجك للأبد،،<br>
+            <span class="sign-name">يوسف</span> ❤️
+          </div>
+        </div>
+        <div class="letter-actions">
+          <button class="love-spark-btn" id="modal-sparkle-btn">
+            <i class="fa-solid fa-heart"></i>
+            <span>أحبكِ يا ذكريات عمري (أطلقي القلوب والشهب)</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- عارض الصور الفاخر بملء الشاشة (Lightbox Modal) -->
+  <div class="lightbox-overlay" id="lightbox-modal">
+    <button class="lightbox-close" id="lightbox-close-btn">&times;</button>
+    <div class="lightbox-content">
+      <img id="lightbox-img" src="" alt="صورة مكبرة">
+      <p id="lightbox-caption" class="lightbox-caption"></p>
+    </div>
+  </div>
+
+  <!-- سكربت التحكم والتفاعلات الحية V2 -->
+  <script src="script.js"></script>
+</body>
+</html>
